@@ -1,0 +1,63 @@
+﻿@page "/fetchdata"
+
+<PageTitle>Consumer Task Records</PageTitle>
+
+@using GroceryStoreAPI.Model;
+@using MudblazorStore.Data
+@inject ConsumerService ConsumerService
+
+<h1>Consumer Task Records</h1>
+
+@if (consumers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Consumer Id</th>
+                <th>Task Name</th>
+                <th>Tag Name</th>
+                <th>Assigned To</th>
+                <th>Color</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Activity Date</th>
+                <th>Activity Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var k in consumers)
+            {
+                <tr>
+                    <td>@k.id</td>
+                    <td>@k.task_record.task_name</td>
+                    <td>@k.task_record.tags.tagName</td>
+                    <td>@k.task_record.assigned_to</td>
+                    <td>@k.task_record.color</td>
+                    <td>@k.task_record.due_date.ToShortDateString()</td>
+                    <td>@k.task_record.status</td>
+                    <td>@k.task_record.activity.activity_date</td>
+                    <td>@k.task_record.activity.activity_description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private string searchString = "";
+    private Consumer consumer = new Consumer();
+    private List<Consumer> consumers = new List<Consumer>();
+    protected override async Task OnInitializedAsync()
+    {
+        GetConsumer();
+    }
+    private List<Consumer> GetConsumer()
+    {
+        consumers = ConsumerService.GetConsumer().ToList();
+        return consumers;
+    }
+}
